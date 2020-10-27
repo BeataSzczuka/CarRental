@@ -1,0 +1,19 @@
+<h1>Our cars</h1>
+
+
+<p *ngIf="!cars"><em>Loading...</em></p>
+
+
+<div *ngFor="let car of cars" class="container">
+  <a [routerLink]="['/car-info', car.carID]">
+    <img *ngIf="!!car.image" [src]="createImagePath(car.image)" />
+    <div>{{ car.brand }}</div>
+    <div>{{ car.productionYear }}</div>
+    <div>{{ car.color }}</div>
+    <div>{{ car.doors }}</div>
+    <div>{{ car.seats }}</div>
+    <div>{{ car.manualGearbox }}</div>
+    <div>{{ car.airConditioning }}</div>
+  </a>
+    <button (click)="delete(car.carID)" >Delete</button>
+</div>
