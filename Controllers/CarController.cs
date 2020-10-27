@@ -42,7 +42,7 @@ namespace CarRental.Controllers
         [HttpPost]
         public async Task<IActionResult> PostCar([FromForm] Car car)
         {
-            if (true) //(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var file = Request.Form.Files[0];
                 var folderName = Path.Combine("Resources", "Images");
@@ -66,8 +66,6 @@ namespace CarRental.Controllers
 
             }
             return BadRequest(ModelState);
-
-            //return CreatedAtAction("PostCar", new { id = car.CarID }, car);
         }
 
         [HttpDelete("{id}", Name = "DeleteCar")]

@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CarComponent } from './car/car.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
@@ -21,7 +20,6 @@ import { MatSnackBarModule } from '@angular/material';
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    FetchDataComponent,
     CarsComponent,
     CarComponent,
     AddCarComponent
@@ -36,7 +34,6 @@ import { MatSnackBarModule } from '@angular/material';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'car-info/:id', component: CarComponent },
-      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
       { path: 'add-car', component: AddCarComponent },
     ]),
     NoopAnimationsModule

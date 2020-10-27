@@ -9,4 +9,30 @@
   <div>{{ car.seats }}</div>
   <div>{{ car.manualGearbox }}</div>
   <div>{{ car.airConditioning }}</div>
+
+  <div class="reservation">
+    <h2>Do you like this car? Check if it is available when you need it.</h2>
+
+
+    <form>
+      <div class="form-group">
+        <label for="from-input">
+          When will you rent a car?
+        </label>
+        <input type="date" min="{{today | date: 'yyyy-MM-dd'}}" max="{{dates.to}}" id="from-input" [(ngModel)]="dates.from" name="from" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="to-input">
+          When will you return the car?
+        </label>
+        <input type="date" min="{{dates.from}}" id="to-input" [(ngModel)]="dates.to" name="to" class="form-control" required/>
+      </div>
+      <button type="button" (click)="clear()" class="btn btn-primary">Clear</button>
+      <button type="submit" (click)="checkIfAvailable()" class="btn btn-primary">Check if it's available</button>
+    </form>
+  </div>
+  <div *ngIf="carAvailable">
+    <div>The car is available from {{dates.from}} to {{dates.to}} </div>
+  <button (click)="reserveCar()">Reserve it!</button>
+  </div>
 </div>
