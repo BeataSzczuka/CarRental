@@ -19,7 +19,7 @@ export class AddCarComponent {
     manualGearbox: false,
     airConditioning: false
   };
-  constructor(private fb: FormBuilder, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar, private cd: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar) {
     this.form = fb.group({
       image: [null, Validators.required],
       brand: ['', Validators.required],

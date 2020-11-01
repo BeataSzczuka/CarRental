@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-car-component',
@@ -14,7 +15,7 @@ export class CarComponent {
   today: Date;
   dates = { from: undefined, to: undefined};
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+  constructor(private route: ActivatedRoute, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar) {
    
     this.carAvailable = false;
     this.today = new Date();
@@ -34,19 +35,27 @@ export class CarComponent {
 
   reserveCar() {
     // toDo
+    this.http.post<Rent>(this.baseUrl + `api/rent`, this.dates).subscribe(() => {
+      this.openSnackBar("Car has been successfully added", "ok");
+    }, error => { this.openSnackBar(error.error.title, "ok"); });
   }
 
   checkIfAvailable() {
     console.log(this.dates.from);
     if (this.dates.from != undefined && this.dates.to != undefined) {
-      this.carAvailable = true;
-      //console.log(this.form.get('fromDate').value);
-      //this.http.post<Car>(this.baseUrl + `api/car`, this.form.value).subscribe((result) => {
-      //  console.log(result)
-      //}, error => { console.log(error); });
+      const params = new HttpParams({ fromObject: { dateFrom: this.dates.from, dateTo: this.dates.to } });
+      this.http.get<boolean>(this.baseUrl + `api/rent/${this.id}/availability`, { params }).subscribe((result: boolean) => {
+        this.carAvailable = result;
+        if (!result) this.openSnackBar("Sorry, this car is not available on the given date.", "ok");
+      }, () => { this.openSnackBar("Something went wrong", "ok"); });
     } else {
-    //  this.openSnackBar("Please complete all required fields", "ok");
+      this.openSnackBar("Please complete all required fields", "ok");
     }
+  }
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
   clear() {
     this.dates = { from: undefined, to: undefined };
@@ -64,4 +73,9 @@ interface Car {
   seats: string;
   manualGearbox: boolean;
   airConditioning: boolean;
+}
+interface Rent {
+  carID: string;
+  dateFrom: Date;
+  dateTo: Date;
 }

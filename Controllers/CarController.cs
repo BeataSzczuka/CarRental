@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting.Internal;
 
 namespace CarRental.Controllers
 {
@@ -16,9 +15,13 @@ namespace CarRental.Controllers
     public class CarController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public CarController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public CarController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -27,7 +30,7 @@ namespace CarRental.Controllers
             return _context.Cars.ToList();
         }
 
-        [HttpGet("{id}", Name = "GetCar")]
+        [HttpGet("{id}", Name = "GetCar")]  
         public ActionResult<Car> GetById(int id)
         {
             var item = _context.Cars.Find(id);

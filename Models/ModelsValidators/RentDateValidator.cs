@@ -17,13 +17,14 @@ namespace CarRental.Models.ModelsValidators
         protected override ValidationResult IsValid(object objValue,
                                                        ValidationContext validationContext)
         {
-            var dateValue = objValue as DateTime? ?? new DateTime();
-
-
-            if (dateValue.Date > DateTime.Now.Date)
+            var today = new DateTime();
+            var dateFrom = ((Rent)validationContext.ObjectInstance).DateFrom;
+            var dateTo = ((Rent)validationContext.ObjectInstance).DateTo;
+            if (DateTime.Compare(dateFrom, today) < 0 || DateTime.Compare(dateFrom, today) < 0 || DateTime.Compare(dateTo, dateFrom) < 0)
             {
                 return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
             }
+
             return ValidationResult.Success;
         }
     }
