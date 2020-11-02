@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs';
+import { AuthorizeService } from '../../api-authorization/authorize.service';
 
 @Component({
   selector: 'app-car-component',
@@ -14,10 +16,11 @@ export class CarComponent {
   id: string;
   carAvailable: boolean;
   today: Date;
-  dates = { from: undefined, to: undefined};
+  dates = { from: undefined, to: undefined };
+  public isAuthenticated: Observable<boolean>;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar) {
-   
+  constructor(private authorizeService: AuthorizeService, private route: ActivatedRoute, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar) {
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
     this.carAvailable = false;
     this.today = new Date();
 
@@ -31,18 +34,16 @@ export class CarComponent {
 
   createImagePath(path: string) {
     path.replace("\\", "/");
-    return `https://localhost:44311/${path}`;
+    return `${this.baseUrl}${path}`;
   }
 
   reserveCar() {
-    // toDo
-    this.http.post<Rent>(this.baseUrl + `api/rent`, this.dates).subscribe(() => {
-      this.openSnackBar("Car has been successfully added", "ok");
+    this.http.post<Rent>(this.baseUrl + 'api/rent', { carID: this.id, DateFrom: this.dates.from, DateTo: this.dates.to }).subscribe(() => {
+      this.openSnackBar("The car has been reserved for you", "ok");
     }, error => { this.openSnackBar(error.error.title, "ok"); });
   }
 
   checkIfAvailable() {
-    console.log(this.dates.from);
     if (this.dates.from != undefined && this.dates.to != undefined) {
       const params = new HttpParams({ fromObject: { dateFrom: this.dates.from, dateTo: this.dates.to } });
       this.http.get<boolean>(this.baseUrl + `api/rent/${this.id}/availability`, { params }).subscribe((result: boolean) => {

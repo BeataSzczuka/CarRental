@@ -7,8 +7,8 @@ namespace CarRental.Models
 {
     public class RentInfo
     {
-        public int CarID { get; set; }
-        public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
+        public string carID { get; set; }
+        public string DateFrom { get; set; }
+        public string DateTo { get; set; }
     }
 }

@@ -25,21 +25,41 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Rent>> GetAll()
+        [Authorize]
+        public ActionResult<List<RentShow>> GetAll()
         {
-            return _context.Rents.ToList();
+            var currentUser = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            var isAdmin = _userManager.IsInRoleAsync(currentUser, "Admin").Result;
+            if (isAdmin)
+            {
+                return _context.Rents
+                    .Select((r)=> new RentShow(){ 
+                        RentID = r.RentID, 
+                        CarID = r.Car.CarID, 
+                        DateFrom =  r.DateFrom,
+                        DateTo =  r.DateTo,
+                        Username = r.User.UserName
+                    }).ToList();
+            }
+            else return Unauthorized();
         }
 
 
         [HttpGet("{id}", Name = "GetRent")]
         public ActionResult<Rent> GetById(int id)
         {
-            var item = _context.Rents.Find(id);
-            if (item == null)
+            var currentUser = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            var isAdmin = _userManager.IsInRoleAsync(currentUser, "Admin").Result;
+            if (isAdmin)
             {
-                return NotFound();
+                var item = _context.Rents.Find(id);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return item;
             }
-            return item;
+            else return Unauthorized();
         }
 
         // /api/rent/0/availability?dateFrom=06/10/2020&dateTo=07/10/2020
@@ -55,7 +75,7 @@ namespace CarRental.Controllers
             return BadRequest(ModelState);
         }
         
-        private bool checkIfCarAvailable(int CarID, DateTime DateFrom, DateTime DateTo)
+        private bool checkIfCarAvailable([FromBody] int CarID, DateTime DateFrom, DateTime DateTo)
         {
             if (_context.Cars.Where(car => car.CarID == CarID).Count() < 1) return false; 
             var rents = _context.Rents
@@ -76,17 +96,21 @@ namespace CarRental.Controllers
         {
             if (ModelState.IsValid)
             {
-                Rent rent = new Rent();
-                rent.Car = _context.Cars.Find(rentInfo.CarID);
-                rent.DateFrom = rentInfo.DateFrom;
-                rent.DateTo = rentInfo.DateTo;
-                //rent.User
-                //var userid = _userManager.GetUserId(User);
-                //var u = User;
-                //bool IsAdmin = _userManager.IsInRole(User.Identity.GetUSerId(), "admin");
-                _context.Rents.Add(rent);
-                await _context.SaveChangesAsync();
-                return Ok(rent);
+                var from = Convert.ToDateTime(rentInfo.DateFrom);
+                var to = Convert.ToDateTime(rentInfo.DateTo);
+                var carid = Int32.Parse(rentInfo.carID);
+                if (checkIfCarAvailable(carid, from, to))
+                {
+                    Rent rent = new Rent();
+                    rent.Car = _context.Cars.Find(carid);
+                    rent.DateFrom = from;
+                    rent.DateTo = to;
+                    rent.User = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                    _context.Rents.Add(rent);
+                    await _context.SaveChangesAsync();
+                    return Ok(rent);
+                }
+                else return BadRequest("The car is already rented");
             }
             return BadRequest(ModelState);
 

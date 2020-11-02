@@ -43,7 +43,8 @@
 
     <div *ngIf="carAvailable" class="alert alert-success">
       <div>The car is available from {{dates.from}} to {{dates.to}} </div>
-      <div id="buttons"><button class="btn btn-primary" (click)="reserveCar()">Reserve it!</button></div>
+      <div *ngIf="!(isAuthenticated | async)" class="warning">You need to be logged in to reserve a car.</div>
+      <div *ngIf="(isAuthenticated | async)" id="buttons"><button class="btn btn-primary" (click)="reserveCar()">Reserve it!</button></div>
     </div>
   </div>
 </div>

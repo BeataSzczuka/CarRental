@@ -52,7 +52,11 @@ export class AddCarComponent {
 
       this.http.post<Car>(this.baseUrl + `api/car`, formData).subscribe(() => {
         this.openSnackBar("Car has been successfully added", "ok");
-      }, error => { this.openSnackBar(error.error.title, "ok"); });
+      }, error => {
+          if (error.status == 401)
+            this.openSnackBar("You are unauthorized", "ok");
+          else this.openSnackBar("Something went wrong", "ok");
+      });
       this.form.reset(this.initialValues);
     } else {
       this.openSnackBar("Please complete all required fields", "ok");

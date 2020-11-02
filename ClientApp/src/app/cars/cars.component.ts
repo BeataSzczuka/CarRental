@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cars-component',
@@ -16,8 +17,10 @@ export class CarsComponent {
   dates = { from: undefined, to: undefined };
   dateFromParam: string = '';
   dateToParam: string = '';
+  public isAdmin: Observable<boolean>;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private _snackBar: MatSnackBar, private activatedRoute: ActivatedRoute, private router: Router) {
+    this.isAdmin = this.http.get<boolean>(this.baseUrl + `api/user`);
     this.today = new Date();
     this.activatedRoute.queryParams.subscribe(params => {
       if (!!params['page']) this.page = +params['page'];
@@ -34,7 +37,7 @@ export class CarsComponent {
   }
   createImagePath(path: string) {
     path.replace("\\", "/");
-    return `https://localhost:44311/${path}`;
+    return `${this.baseUrl}${path}`;
   }
 
   delete(id) {

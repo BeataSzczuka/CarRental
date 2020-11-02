@@ -1,0 +1,27 @@
+<p *ngIf="!rents"><em>Loading...</em></p>
+
+
+<table *ngIf="!!rents">
+  <thead>
+    <tr>
+      <th>Rent ID</th>
+      <th>Username</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Car ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let rent of rents">
+      <td>{{ rent.rentID }}</td>
+      <td>{{ rent.username }}</td>
+      <td>{{ rent.dateFrom | date:'mediumDate' }}</td>
+      <td>{{ rent.dateTo | date:'mediumDate' }}</td>
+      <td>{{ rent.carID }}</td>
+      <td>
+        <button class="btn btn-danger" (click)="delete(rent.rentID)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

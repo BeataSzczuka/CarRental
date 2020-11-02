@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PagedList;
@@ -59,41 +60,55 @@ namespace CarRental.Controllers
 
         // POST: api/car
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostCar([FromForm] Car car)
         {
-            if (ModelState.IsValid)
+            var currentUser = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            var isAdmin = _userManager.IsInRoleAsync(currentUser, "Admin").Result;
+            if (isAdmin)
             {
-                var file = Request.Form.Files[0];
-                var folderName = Path.Combine("Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (file.Length > 0)
+                if (ModelState.IsValid)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    var file = Request.Form.Files[0];
+                    var folderName = Path.Combine("Resources", "Images");
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    if (file.Length > 0)
                     {
-                        file.CopyTo(stream);
+                        var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                        var fullPath = Path.Combine(pathToSave, fileName);
+                        var dbPath = Path.Combine(folderName, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                        }
+                        car.Image = dbPath;
+                        _context.Cars.Add(car);
+                        await _context.SaveChangesAsync();
+                        return Ok(car);
                     }
-                    car.Image = dbPath;
-                    _context.Cars.Add(car);
-                    await _context.SaveChangesAsync();
-                    return Ok(car);
+
+
+
                 }
-
-
-
+                return BadRequest(ModelState);
             }
-            return BadRequest(ModelState);
+            else return Unauthorized();
         }
 
         [HttpDelete("{id}", Name = "DeleteCar")]
+        [Authorize]
         public ActionResult<Car> DeleteById(int id)
         {
-            var car = _context.Cars.Find(id);
-            if (car != null) _context.Cars.Remove(car);
-            _context.SaveChanges();
-            return Ok();
+            var currentUser = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            var isAdmin = _userManager.IsInRoleAsync(currentUser, "Admin").Result;
+            if (isAdmin)
+            {
+                var car = _context.Cars.Find(id);
+                if (car != null) _context.Cars.Remove(car);
+                _context.SaveChanges();
+                return Ok();
+            }
+            else return Unauthorized();
         }
     }
 }

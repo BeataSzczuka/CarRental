@@ -15,6 +15,7 @@ import { CarsComponent } from './cars/cars.component';
 import { AddCarComponent } from './add-car/add-car.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material';
+import { RentsComponent } from './rents/rents.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +23,8 @@ import { MatSnackBarModule } from '@angular/material';
     HomeComponent,
     CarsComponent,
     CarComponent,
-    AddCarComponent
+    AddCarComponent,
+    RentsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,6 +37,7 @@ import { MatSnackBarModule } from '@angular/material';
       { path: '', component: CarsComponent, pathMatch: 'full' },
       { path: 'car-info/:id', component: CarComponent },
       { path: 'add-car', component: AddCarComponent },
+      { path: 'rents', component: RentsComponent },
     ]),
     NoopAnimationsModule
   ],

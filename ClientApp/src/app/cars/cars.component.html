@@ -37,7 +37,7 @@
       </div>
     </div>
     <span id="buttons">
-      <button class="btn btn-danger" (click)="delete(car.carID)">Delete</button>
+      <button *ngIf="(isAdmin | async)" class="btn btn-danger" (click)="delete(car.carID)">Delete</button>
       <button class="btn btn-primary" [routerLink]="['/car-info', car.carID]">Show more</button>
     </span>
   </div>
