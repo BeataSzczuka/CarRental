@@ -6,7 +6,8 @@ import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-car-component',
-  templateUrl: './car.component.html'
+  templateUrl: './car.component.html',
+  styleUrls: ['./car.component.scss']
 })
 export class CarComponent {
   public car: Car;

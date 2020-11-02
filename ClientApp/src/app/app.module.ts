@@ -32,7 +32,7 @@ import { MatSnackBarModule } from '@angular/material';
     ApiAuthorizationModule,
     MatSnackBarModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: CarsComponent, pathMatch: 'full' },
       { path: 'car-info/:id', component: CarComponent },
       { path: 'add-car', component: AddCarComponent },
     ]),

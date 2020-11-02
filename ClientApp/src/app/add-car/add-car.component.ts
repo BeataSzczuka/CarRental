@@ -5,7 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-car-component',
-  templateUrl: './add-car.component.html'
+  templateUrl: './add-car.component.html',
+  styleUrls: ['./add-car.component.scss']
 })
 export class AddCarComponent {
   form: FormGroup;

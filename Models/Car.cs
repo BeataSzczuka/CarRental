@@ -17,7 +17,7 @@ namespace CarRental.Models
         public bool ManualGearbox { get; set; }
         public bool AirConditioning { get; set; }
         public string Image { get; set; }
-
+        public decimal PriceDay { get; set; }
     }
 
 

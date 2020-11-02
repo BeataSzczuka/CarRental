@@ -1,19 +1,45 @@
-<h1>Our cars</h1>
-
-
 <p *ngIf="!cars"><em>Loading...</em></p>
-
-
-<div *ngFor="let car of cars" class="container">
-  <a [routerLink]="['/car-info', car.carID]">
-    <img *ngIf="!!car.image" [src]="createImagePath(car.image)" />
-    <div>{{ car.brand }}</div>
-    <div>{{ car.productionYear }}</div>
-    <div>{{ car.color }}</div>
-    <div>{{ car.doors }}</div>
-    <div>{{ car.seats }}</div>
-    <div>{{ car.manualGearbox }}</div>
-    <div>{{ car.airConditioning }}</div>
-  </a>
-    <button (click)="delete(car.carID)" >Delete</button>
+<div class="top">
+</div>
+  <form>
+    <div class="form-group">
+      <h3>
+        <label for="from-input">
+          When will you rent a car?
+        </label>
+      </h3>
+      <input type="date" min="{{today | date: 'yyyy-MM-dd'}}" max="{{dates.to}}" id="from-input" [(ngModel)]="dates.from" name="from" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <h3><label for="to-input">
+        When will you return the car?
+      </label></h3>
+      <input type="date" min="{{dates.from}}" id="to-input" [(ngModel)]="dates.to" name="to" class="form-control" required />
+    </div>
+    <span id="buttons">
+      <button type="button" (click)="clear()" class="btn btn-secondary">Clear</button>
+      <button type="submit" (click)="filter()" class="btn btn-primary">Filter</button>
+    </span>
+  </form>
+<div class="cars">
+  <div *ngFor="let car of cars" class="container">
+    <div>
+      <div class="image" ><img *ngIf="!!car.image" [src]="createImagePath(car.image)" /><img *ngIf="!car.image" src="Resources/car-placeholder.png" /></div>
+      <div class="car-info">
+        <div><h1>{{ car.brand }}</h1></div>
+        <div id="price"><span>Price for a day:</span><span>{{ car.priceDay }}€</span></div>
+        <div class="info"><span>Production year:</span><span>{{ car.productionYear }}</span></div>
+        <div class="info"><span>Color:</span><span>{{ car.color }}</span></div>
+        <div class="info"><span>Doors:</span><span>{{ car.doors }}</span></div>
+        <div class="info"><span>Seats:</span><span>{{ car.seats }}</span></div>
+        <div class="info"><span>Gearbox:</span><span>{{ car.manualGearbox ? 'manual' : 'automatic' }}</span></div>
+        <div class="info"><span *ngIf="car.airConditioning">Air conditioning</span></div>
+      </div>
+    </div>
+    <span id="buttons">
+      <button class="btn btn-danger" (click)="delete(car.carID)">Delete</button>
+      <button class="btn btn-primary" [routerLink]="['/car-info', car.carID]">Show more</button>
+    </span>
+  </div>
+<button class="btn btn-outline-primary" id="load-more-button" *ngIf="!lastPage" (click)="loadMore()">Load more</button>
 </div>

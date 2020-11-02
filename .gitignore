@@ -231,4 +231,4 @@ _Pvt_Extensions
 .fake/
 
 Migrations/**
-Resources/**
+Resources/Images/**

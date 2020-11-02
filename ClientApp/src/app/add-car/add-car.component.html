@@ -1,4 +1,4 @@
-<h1>Add car</h1>
+<h1>Add a car</h1>
 
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -6,6 +6,7 @@
     <label for="file">Choose File</label>
     <input type="file"
            id="file"
+            class="form-control-file" 
            accept='image/*'
            (change)="handleFileInput($event.target.files)"
            >

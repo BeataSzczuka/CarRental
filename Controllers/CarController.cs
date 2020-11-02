@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -7,6 +8,7 @@ using CarRental.Data;
 using CarRental.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PagedList;
 
 namespace CarRental.Controllers
 {
@@ -16,18 +18,32 @@ namespace CarRental.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public CarController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public CarController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         [HttpGet]
-        public ActionResult<List<Car>> GetAll()
+        public ActionResult<IPagedList<Car>> GetAll(int? page, string? from, string? to)
         {
-            return _context.Cars.ToList();
+            IQueryable<Car> cars ;
+            if (from != null && to != null)
+            {
+                var dateFrom = Convert.ToDateTime(from);
+                var dateTo = Convert.ToDateTime(to);
+                var rented = _context.Cars
+                    .Join(_context.Rents, car => car.CarID, rent => rent.Car.CarID, (car, rent) => new { Car = car, Rent = rent })
+                    .Where((o) => (o.Rent.DateFrom >= dateFrom && o.Rent.DateFrom <= dateTo) || (o.Rent.DateTo >= dateFrom && o.Rent.DateTo <= dateTo))
+                    .Select((o) => o.Car.CarID)
+                    .ToList();
+
+                cars = _context.Cars.Where(c => !rented.Contains(c.CarID));
+            }
+            else { cars = _context.Cars; }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return Ok(cars.ToPagedList(pageNumber, pageSize));
         }
 
         [HttpGet("{id}", Name = "GetCar")]  

@@ -1,0 +1,53 @@
+.car-component {
+  margin-bottom: 200px;
+}
+
+.image {
+  width: 100%;
+  text-align: center;
+
+  img {
+    max-height: 500px;
+    max-width: 100%;
+  }
+}
+
+#brand{
+    text-align: center;
+}
+
+#buttons{
+    width: 100%;
+    text-align: right;
+    button{
+        margin: 1em;
+    }
+}
+.info {
+  display: flex;
+
+  span:first-child {
+    color: #1b6ec2;
+    flex: 2;
+    font-size: large;
+    margin: 1.5em;
+  }
+
+  span:nth-child(2) {
+    font-size: larger;
+    margin: 1.5em;
+    flex: 3;
+    text-align: center;
+  }
+}
+.car-info {
+  max-width: 600px;
+  margin: auto;
+  margin-bottom: 2em;
+
+  &:first-child {
+    text-align: center;
+    padding: 3em;
+    color: #1b6ec2;
+  }
+}

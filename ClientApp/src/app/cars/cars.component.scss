@@ -1,0 +1,91 @@
+.top {
+  background: url("/Resources/car-park-3490758_1920.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  filter: contrast(0.5);
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 400px;
+}
+
+form {
+  position: absolute;
+  left: 10%;
+  text-align: center;
+  width: 80%;
+  margin-top: 1em;
+
+  label {
+    color: white;
+    font-weight: 500;
+  }
+}
+.cars {
+  position: relative;
+  top: 450px;
+  margin-bottom: 5em;
+}
+
+.container {
+  padding: 1em;
+  margin: 2em 0;
+  background: rgba(27, 110, 194, 0.1);
+  min-width:250px;
+
+  & > div {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.info{
+    flex: 1 180px;
+}
+
+.image {
+  flex: 1 40%;
+  min-width: 200px;
+  text-align: center;
+
+  img {
+    max-height: 200px;
+  }
+}
+
+.car-info {
+  flex: 3 60%;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.car-info span:first-child{
+  color: #579ce4;
+  font-weight: 500;
+  padding: 10px;
+}
+.car-info div:first-child {
+  flex: 1 40%;
+  padding: 1em;
+}
+#price {
+  flex: 1 60%;
+  padding: 1em;
+  text-align: end;
+
+  span:last-child {
+    font-size: xxx-large;
+  }
+}
+#buttons {
+  display: block;
+  text-align: right;
+  button {
+      margin: 10px;
+  }
+}
+#load-more-button {
+  margin-top: 1em;
+  width: 100%;
+}
