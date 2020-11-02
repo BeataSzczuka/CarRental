@@ -29,8 +29,8 @@
           <li *ngIf="(isAdmin | async)" class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/add-car']">Add car</a>
           </li>
-          <li *ngIf="(isAdmin | async)" class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/rents']">Rents</a>
+          <li *ngIf="(isAuthenticated | async)" class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/rents']">Reservations</a>
           </li>
         </ul>
       </div>

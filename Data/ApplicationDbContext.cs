@@ -26,6 +26,7 @@ namespace CarRental.Data
 
             modelBuilder.Entity<ApplicationUser>(entity => { entity.ToTable(name: "User"); });
             modelBuilder.Entity<ApplicationRole>(entity => { entity.ToTable(name: "Role"); });
+            modelBuilder.Entity<Rent>().HasOne(r => r.Car).WithMany().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

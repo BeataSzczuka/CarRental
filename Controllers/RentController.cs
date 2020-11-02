@@ -33,15 +33,28 @@ namespace CarRental.Controllers
             if (isAdmin)
             {
                 return _context.Rents
-                    .Select((r)=> new RentShow(){ 
-                        RentID = r.RentID, 
-                        CarID = r.Car.CarID, 
-                        DateFrom =  r.DateFrom,
-                        DateTo =  r.DateTo,
+                    .Select((r) => new RentShow()
+                    {
+                        RentID = r.RentID,
+                        CarID = r.Car.CarID,
+                        DateFrom = r.DateFrom,
+                        DateTo = r.DateTo,
                         Username = r.User.UserName
                     }).ToList();
             }
-            else return Unauthorized();
+            else
+            {
+                return _context.Rents
+                    .Where((r) => r.User == currentUser)
+                    .Select((r) => new RentShow()
+                    {
+                        RentID = r.RentID,
+                        CarID = r.Car.CarID,
+                        DateFrom = r.DateFrom,
+                        DateTo = r.DateTo,
+                        Username = r.User.UserName
+                    }).ToList();
+            }
         }
 
 

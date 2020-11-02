@@ -11,12 +11,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AddCarComponent {
   form: FormGroup;
   initialValues = {
-    image: undefined,
+    image: null,
     brand: '',
     productionYear: undefined,
     color: '',
     doors: undefined,
     seats: undefined,
+    price: undefined,
     manualGearbox: false,
     airConditioning: false
   };
@@ -28,6 +29,7 @@ export class AddCarComponent {
       color: ['', Validators.required],
       doors: [undefined, Validators.required],
       seats: [undefined, Validators.required],
+      price: [undefined, Validators.required],
       manualGearbox: [false, Validators.required],
       airConditioning: [false, Validators.required]
     });
@@ -47,6 +49,7 @@ export class AddCarComponent {
       formData.append('Color', this.form.get('color').value);
       formData.append('Doors', this.form.get('doors').value);
       formData.append('Seats', this.form.get('seats').value);
+      formData.append('PriceDay', this.form.get('price').value);
       formData.append('ManualGearbox', this.form.get('manualGearbox').value);
       formData.append('AirConditioning', this.form.get('airConditioning').value);
 
@@ -78,6 +81,7 @@ interface Car {
   color: string;
   doors: string;
   seats: string;
+  priceDay: string;
   manualGearbox: boolean;
   airConditioning: boolean;
 }

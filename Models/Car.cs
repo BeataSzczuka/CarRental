@@ -19,10 +19,4 @@ namespace CarRental.Models
         public string Image { get; set; }
         public decimal PriceDay { get; set; }
     }
-
-
-    public interface Gearbox
-    {
-
-    }
 }
